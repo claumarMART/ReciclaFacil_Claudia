@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
@@ -112,10 +114,13 @@ fun PantallaProducto(controladorNavegacion: NavController, idProducto: Int) {
         Column(
             modifier = Modifier.fillMaxSize()                // ocupa el espacio disponible
                 .padding(innerPadding)        // usa el padding por defecto
-                .background(Color(0xFFE0F8D9)),       // color de fondo
+                .background(Color(0xFFE0F8D9))       // color de fondo
+                .verticalScroll(state = rememberScrollState()), // scroll vertical
             horizontalAlignment = Alignment.CenterHorizontally,   // centrado horizontal
             verticalArrangement = Arrangement.Center              // centrado vertical
         ){
+            Spacer(modifier = Modifier.height(20.dp)) // separacion vertical entre componentes
+
             // IMAGEN DEL PRODUCTO
             Image(
                 painter = obtenerPainterProducto(producto?.tituloProducto ?: ""), // imagen guardada en drawable
@@ -185,6 +190,8 @@ fun PantallaProducto(controladorNavegacion: NavController, idProducto: Int) {
                     )
                 )
             }
+
+            Spacer(modifier = Modifier.height(20.dp)) // separacion vertical entre componentes
         }
     }
 }

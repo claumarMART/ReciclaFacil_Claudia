@@ -94,7 +94,7 @@ fun PantallaInicio(controladorNavegacion: NavController) {
                             text = "Inicio",    // texto
                             style = TextStyle(
                                 fontFamily = FontFamily.SansSerif,  // fuente tipografica del texto
-                                fontSize = 18.sp,                   // tamaño de fuente del texto
+                                fontSize = 14.sp,                   // tamaño de fuente del texto
                                 fontWeight = FontWeight.Bold        // texto con negrita
                             )
                         )
@@ -124,7 +124,7 @@ fun PantallaInicio(controladorNavegacion: NavController) {
                             text = "Busqueda",    // texto
                             style = TextStyle(
                                 fontFamily = FontFamily.SansSerif,  // fuente tipografica del texto
-                                fontSize = 18.sp                   // tamaño de fuente del texto
+                                fontSize = 14.sp                   // tamaño de fuente del texto
                             )
                         )
                     },
@@ -153,7 +153,7 @@ fun PantallaInicio(controladorNavegacion: NavController) {
                             text = "Escáner",    // texto
                             style = TextStyle(
                                 fontFamily = FontFamily.SansSerif,  // fuente tipografica del texto
-                                fontSize = 18.sp                   // tamaño de fuente del texto
+                                fontSize = 14.sp                   // tamaño de fuente del texto
                             )
                         )
                     },
@@ -182,7 +182,7 @@ fun PantallaInicio(controladorNavegacion: NavController) {
                             text = "Historial",    // texto
                             style = TextStyle(
                                 fontFamily = FontFamily.SansSerif,  // fuente tipografica del texto
-                                fontSize = 18.sp                   // tamaño de fuente del texto
+                                fontSize = 14.sp                   // tamaño de fuente del texto
                             )
                         )
                     },
@@ -211,7 +211,7 @@ fun PantallaInicio(controladorNavegacion: NavController) {
                             text = "Perfil",    // texto
                             style = TextStyle(
                                 fontFamily = FontFamily.SansSerif,  // fuente tipografica del texto
-                                fontSize = 18.sp                   // tamaño de fuente del texto
+                                fontSize = 14.sp                   // tamaño de fuente del texto
                             )
                         )
                     },
