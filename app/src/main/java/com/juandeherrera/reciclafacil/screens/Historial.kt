@@ -1,7 +1,7 @@
 package com.juandeherrera.reciclafacil.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,8 +23,8 @@ import androidx.room.Room
 import com.juandeherrera.reciclafacil.localdb.AppDB
 import com.juandeherrera.reciclafacil.localdb.Estructura
 import com.juandeherrera.reciclafacil.localdb.ProductoData
+import com.juandeherrera.reciclafacil.navigation.AppScreens
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,14 +39,11 @@ fun PantallaHistorial(controladorNavegacion: NavController) {
             .build()
     }
 
-    // Estado para la lista de productos
     var listaReciclados by remember { mutableStateOf<List<ProductoData>>(emptyList()) }
     val usuario = remember { db.sesionDao().obtenerUsuario() }
 
-    // CARGA SEGURA: Esto evita que la app se cierre al abrir la pantalla
     LaunchedEffect(Unit) {
         usuario?.let { u ->
-            // Ejecutamos la consulta en un hilo secundario
             val datos = withContext(Dispatchers.IO) {
                 db.historialDao().obtenerHistorialUsuario(u.idUsuario)
             }
@@ -57,11 +54,37 @@ fun PantallaHistorial(controladorNavegacion: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Mi Historial", style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 24.sp)) },
+                modifier = Modifier.height(100.dp),
+                title = {
+                    Text(
+                        "Mi Historial",
+                        style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 28.sp)
+                    )
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color(0xFF34BB00),
                     titleContentColor = Color.White
-                )
+                ),
+                // BOTÓN DE INICIO A LA IZQUIERDA
+                navigationIcon = {
+                    Text(
+                        text = "Volver",
+                        color = Color.White,
+                        style = TextStyle(
+                            fontFamily = FontFamily.SansSerif,
+                            fontSize = 20.sp,
+
+                        ),
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .clickable {
+                                // Navega a la ruta "inicio" y limpia la pila
+                                controladorNavegacion.navigate(AppScreens.inicio.route) {
+                                    popUpTo(AppScreens.inicio.route) { inclusive = true }
+                                }
+                            }
+                    )
+                }
             )
         }
     ) { innerPadding ->
@@ -69,7 +92,7 @@ fun PantallaHistorial(controladorNavegacion: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Color(0xFFF5F5F5))
+                .background(Color(0xFFE0F8D9))
         ) {
             if (listaReciclados.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
