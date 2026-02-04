@@ -4,35 +4,13 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.input.TextObfuscationMode
-import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedSecureTextField
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,13 +19,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.room.Room
 import com.juandeherrera.reciclafacil.R
 import com.juandeherrera.reciclafacil.localdb.AppDB
-import com.juandeherrera.reciclafacil.localdb.DatabaseProvider
 import com.juandeherrera.reciclafacil.localdb.Estructura
 import com.juandeherrera.reciclafacil.localdb.UsuarioData
 import com.juandeherrera.reciclafacil.navigation.AppScreens
@@ -56,223 +36,155 @@ import com.juandeherrera.reciclafacil.navigation.AppScreens
 @Composable
 fun PantallaCrearUsuario(controladorNavegacion: NavController) {
 
-    // variables para los datos del formulario
+    // Estados para los campos de texto
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    val password = rememberTextFieldState()
+    var password by remember { mutableStateOf("") }
     var passVisible by remember { mutableStateOf(false) }
 
-    val emailPattern = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}") // patron que debe cumplir el email
-
-    val context = LocalContext.current // se obtiene el contexto actual (necesario para la bd local y mostrar mensajes Toasts)
+    val emailPattern = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    val context = LocalContext.current
 
     Scaffold { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize()                 // ocupa el espacio disponible
-                .padding(innerPadding) // usa el padding por defecto
-                .background(Color.White),             // color de fondo
-            horizontalAlignment = Alignment.CenterHorizontally,   // centrado horizontal
-            verticalArrangement = Arrangement.Center              // centrado vertical
-        ){
-
-            // imagen con el logo de la aplicacion
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(Color.White),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Logo
             Image(
-                painter = painterResource(id = R.drawable.logo),  // ruta a la imagen en local
-                contentDescription = "Imagen del titulo"          // descripcion
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo Reciclafacil",
+                modifier = Modifier.size(100.dp)
             )
 
-            Spacer(modifier = Modifier.height(20.dp))  // separacion vertical entre componentes
+            Spacer(modifier = Modifier.height(20.dp))
 
+            // Títulos
             Row(
-                modifier = Modifier.fillMaxWidth(), // ocupa el ancho maximo posible
-                horizontalArrangement = Arrangement.Center,  // espaciado horizontal entre elementos
-                verticalAlignment = Alignment.CenterVertically     // centrado vertical
-            ){
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = "Regístrate en ",
-                    color = Color.Black,   // color del texto del titulo
-                    style = TextStyle(
-                        fontFamily = FontFamily.SansSerif,  // fuente tipografica del titulo
-                        fontSize = 28.sp,                    // tamaño de fuente del titulo
-                        fontWeight = FontWeight.Bold    // texto con negrita
-                    )
+                    style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 )
                 Text(
                     text = "Reciclafacil",
-                    color = Color(0xFF34BB00),   // color del texto del titulo
-                    style = TextStyle(
-                        fontFamily = FontFamily.SansSerif,  // fuente tipografica del titulo
-                        fontSize = 28.sp,                    // tamaño de fuente del titulo
-                        fontWeight = FontWeight.Bold        // texto con negrita
-                    )
+                    color = Color(0xFF34BB00),
+                    style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))  // separacion vertical entre componentes
+            Spacer(modifier = Modifier.height(25.dp))
 
-            // se pide el nombre del usuario
+            // Campo Nombre
             OutlinedTextField(
-                value = nombre,  // valor del campo de texto
-                onValueChange = { if (it.length < 40){ nombre = it } },  // se limita la longitud a 40 caracteres
-                label = {
-                    Text(
-                        text = "Nombre",  // texto del labal
-                        color = Color.Black          // color del texto de label
-                    )
-                },
-                modifier = Modifier.width(300.dp),  // ancho del campo de texto
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFF34BB00),   // borde del campo cuando esta activo
-                    unfocusedIndicatorColor = Color(0xFF34BB00), // borde del campo cuando no esta activo
-                    focusedContainerColor = Color.White,   // color del fondo del campo cuando esta activo
-                    unfocusedContainerColor = Color.White, // color del fondo del campo cuando no esta activo
-                    cursorColor = Color(0xFF34BB00) // color del cursor en el campo de texto
+                value = nombre,
+                onValueChange = { if (it.length < 40) nombre = it },
+                label = { Text("Nombre") },
+                modifier = Modifier.width(300.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF34BB00),
+                    unfocusedBorderColor = Color(0xFF34BB00),
+                    cursorColor = Color(0xFF34BB00),
+                    focusedLabelColor = Color.Black
                 )
             )
 
-            Spacer(modifier = Modifier.height(20.dp))  // separacion vertical entre componentes
+            Spacer(modifier = Modifier.height(15.dp))
 
-            // se pide el email del usuario
+            // Campo Email
             OutlinedTextField(
-                value = email,  // valor del campo de texto
-                onValueChange = { if (it.length < 40){ email = it } },  // se limita la longitud a 40 caracteres
-                label = {
-                    Text(
-                        text = "Email",  // texto del labal
-                        color = Color.Black          // color del texto de label
-                    )
-                },
-                modifier = Modifier.width(300.dp),  // ancho del campo de texto
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFF34BB00),   // borde del campo cuando esta activo
-                    unfocusedIndicatorColor = Color(0xFF34BB00), // borde del campo cuando no esta activo
-                    focusedContainerColor = Color.White,   // color del fondo del campo cuando esta activo
-                    unfocusedContainerColor = Color.White, // color del fondo del campo cuando no esta activo
-                    cursorColor = Color(0xFF34BB00) // color del cursor en el campo de texto
+                value = email,
+                onValueChange = { if (it.length < 40) email = it },
+                label = { Text("Email") },
+                modifier = Modifier.width(300.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF34BB00),
+                    unfocusedBorderColor = Color(0xFF34BB00),
+                    cursorColor = Color(0xFF34BB00),
+                    focusedLabelColor = Color.Black
                 )
             )
 
-            Spacer(modifier = Modifier.height(20.dp))  // separacion vertical entre componentes
+            Spacer(modifier = Modifier.height(15.dp))
 
-            // se pide la contraseña del usuario
-            OutlinedSecureTextField(
-                state = password,  // estado que contiene el texto introducido (la contraseña)
-                label = {
-                    Text(
-                        text = "Contraseña",   // texto del labal
-                        color = Color.Black    // color del texto de label
-                    )
-                },
-                modifier = Modifier.width(300.dp),  // ancho del campo de texto
-                trailingIcon = { // icono que va al final del campo de texto
-                    IconButton(
-                        onClick = { passVisible = !passVisible }  // al pulsar el icono cambia el estado para mostrar/ocultar la contraseña
-                    ){
+            // Campo Contraseña (Corregido con OutlinedTextFieldDefaults)
+            OutlinedTextField(
+                value = password,
+                onValueChange = { if (it.length <= 8) password = it },
+                label = { Text("Contraseña (8 caracteres)") },
+                modifier = Modifier.width(300.dp),
+                visualTransformation = if (passVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    IconButton(onClick = { passVisible = !passVisible }) {
                         Icon(
-                            // se cambia el icono si la contraseña es visible o no
                             imageVector = if (passVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-
-                            // se cambia la descripcion para lectores de pantalla en funcion si la contraseña es visible o no
-                            contentDescription = if (passVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                            contentDescription = if (passVisible) "Ocultar" else "Mostrar"
                         )
                     }
                 },
-                // controla como se oculta el texto (lo hace visibible completamente o solo muestra el ultimo caracter)
-                textObfuscationMode = if (passVisible) TextObfuscationMode.Visible else TextObfuscationMode.RevealLastTyped,
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFF34BB00),   // borde del campo cuando esta activo
-                    unfocusedIndicatorColor = Color(0xFF34BB00), // borde del campo cuando no esta activo
-                    focusedContainerColor = Color.White,   // color del fondo del campo cuando esta activo
-                    unfocusedContainerColor = Color.White, // color del fondo del campo cuando no esta activo
-                    cursorColor = Color(0xFF34BB00) // color del cursor en el campo de texto
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF34BB00),
+                    unfocusedBorderColor = Color(0xFF34BB00),
+                    cursorColor = Color(0xFF34BB00),
+                    focusedLabelColor = Color.Black
                 )
             )
 
-            Spacer(modifier = Modifier.height(20.dp))  // separacion vertical entre componentes
+            Spacer(modifier = Modifier.height(30.dp))
 
-            // BOTON DE REGISTRAR USUARIO
+            // Botón Registro
             Button(
                 onClick = {
-                    // instancia a la base de datos local
-                    // se indica el contexto, nombre del archivo, permitiendo operaciones en el hilo principal
-                    // con allowMainThreadQueries() se hace que el manejo de la base de datos y la app corran en el mismo hilo (no es lo mas recomendable)
-                    val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME).allowMainThreadQueries().build()
+                    val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
+                        .allowMainThreadQueries()
+                        .build()
 
-                    val usuarioem = db.usuarioDao().getUser(email) // se obtiene el usuario (si existiese sino null) a partir del email
+                    val usuarioExistente = db.usuarioDao().getUser(email)
 
-                    // validaciones basicas de los campos de texto
-                    when{
-                        nombre.isBlank() -> {
-                            Toast.makeText(context, "El nombre no puede estar vacio", Toast.LENGTH_SHORT).show()
-                        }
-                        email.isBlank() -> {
-                            Toast.makeText(context, "El email no puede estar vacio", Toast.LENGTH_SHORT).show()
-                        }
-                        !email.matches(emailPattern) -> {
-                            Toast.makeText(context, "El email no tiene un formato valido", Toast.LENGTH_SHORT).show()
-                        }
-                        password.text.length != 8 -> {
-                            Toast.makeText(context, "La contraseña debe tener 8 caracteres", Toast.LENGTH_SHORT).show()
-                        }
-                        usuarioem != null -> {
-                            Toast.makeText(context, "Ya existe un usuario con ese email", Toast.LENGTH_SHORT).show()
-                        }
+                    when {
+                        nombre.isBlank() -> Toast.makeText(context, "El nombre está vacío", Toast.LENGTH_SHORT).show()
+                        email.isBlank() -> Toast.makeText(context, "El email está vacío", Toast.LENGTH_SHORT).show()
+                        !email.matches(emailPattern) -> Toast.makeText(context, "Formato de email inválido", Toast.LENGTH_SHORT).show()
+                        password.length != 8 -> Toast.makeText(context, "La contraseña requiere 8 caracteres", Toast.LENGTH_SHORT).show()
+                        usuarioExistente != null -> Toast.makeText(context, "Este email ya está registrado", Toast.LENGTH_SHORT).show()
                         else -> {
-                            // se almacena los datos en un usuario para la base de datos local
                             val user = UsuarioData(
                                 nombreUsuario = nombre,
                                 emailUsuario = email,
-                                passwordUsuario = password.text.toString()
+                                passwordUsuario = password
                             )
-
-                            db.usuarioDao().nuevoUsuario(user) // se agrega el usuario a la base de datos local
-
-                            Toast.makeText(context, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show() // se muestra un mensaje de confirmacion al usuario
-
-                            controladorNavegacion.navigate(route = AppScreens.login.route) // se regresa a la pantalla de login
+                            db.usuarioDao().nuevoUsuario(user)
+                            Toast.makeText(context, "¡Usuario creado con éxito!", Toast.LENGTH_LONG).show()
+                            controladorNavegacion.navigate(AppScreens.login.route)
                         }
                     }
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF34BB00),  // color de fondo del boton
-                    contentColor = Color.White                  // color del texto del boton
-                )
-            ){
-                Text(
-                    text = "Registrate",     // texto
-                    style = TextStyle(
-                        fontFamily = FontFamily.SansSerif,  // fuente tipografica
-                        fontSize = 20.sp     // tamaño de la fuente del texto del botón
-                    )
-                )
+                modifier = Modifier.width(300.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF34BB00))
+            ) {
+                Text("Regístrate", fontSize = 20.sp, color = Color.White)
             }
 
-            Spacer(modifier = Modifier.height(20.dp))  // separacion vertical entre componentes
+            Spacer(modifier = Modifier.height(20.dp))
 
+            // Navegación a Login
             Row(
-                modifier = Modifier.fillMaxWidth(), // ocupa el ancho maximo posible
-                horizontalArrangement = Arrangement.Center,  // espaciado horizontal entre elementos
-                verticalAlignment = Alignment.CenterVertically     // centrado vertical
-            ){
-                Text(
-                    text = "¿Ya tienes una cuenta? ",
-                    color = Color.Black,   // color del texto del titulo
-                    style = TextStyle(
-                        fontFamily = FontFamily.SansSerif,  // fuente tipografica del titulo
-                        fontSize = 18.sp,                    // tamaño de fuente del titulo
-                    )
-                )
+                modifier = Modifier.clickable { controladorNavegacion.navigate(AppScreens.login.route) },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "¿Ya tienes una cuenta? ", color = Color.Black)
                 Text(
                     text = "Inicia sesión",
-                    color = Color.Green,   // color del texto del titulo
-                    style = TextStyle(
-                        fontFamily = FontFamily.SansSerif,  // fuente tipografica del titulo
-                        fontSize = 18.sp,                    // tamaño de fuente del titulo
-                        fontWeight = FontWeight.Bold        // texto con negrita
-                    ),
-                    modifier = Modifier.clickable {
-                        controladorNavegacion.navigate(AppScreens.login.route) // vas al formulario de crear el usuario
-                    }
+                    color = Color(0xFF34BB00),
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

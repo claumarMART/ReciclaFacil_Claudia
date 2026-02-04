@@ -1,19 +1,18 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp") version "2.3.4"  // plugin ksp (agregar primero y sincronizar)
+    id("com.google.devtools.ksp") version "2.0.21-1.0.28"
 }
 
 android {
     namespace = "com.juandeherrera.reciclafacil"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.juandeherrera.reciclafacil"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -30,8 +29,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -39,26 +41,25 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.material3:material3:1.4.0") // dependencia de actualización de Material3
-    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.5.0-alpha11") // navegacion adaptativa segun el tamaño de pantalla
-    implementation("androidx.compose.material3:material3-window-size-class:1.4.0") // herramientas para clasificar el tamaño de la pantalla
+    // UI y Material 3 (Versiones estables para SDK 35)
+    implementation(libs.androidx.compose.material3)
+    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.0.0-alpha07")
+    implementation("androidx.compose.material3:material3-window-size-class")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("com.composables:icons-lucide:1.1.0")
 
-    // dependencias para el uso de iconos
-    implementation("androidx.compose.material:material-icons-extended:1.5.0-alpha11") // dependencia para iconos de formularios
-    implementation("com.composables:icons-lucide:1.1.0") // dependencia para la libreria de iconos Lucide
+    // Room Database (Versión 2.6.1 es la correcta para SDK 35)
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 
-    // dependencias para usar la base de datos local
-    implementation("androidx.room:room-runtime:2.8.4") // dependencia principal para poder usar Room
-    ksp("androidx.room:room-compiler:2.8.4")           // dependencia que permite usar el procesador de anotaciones de Room (KSP)
-    implementation("androidx.room:room-ktx:2.8.4")     // dependencia que agrega extensiones de Kotlin para Room
-    implementation("io.coil-kt:coil-compose:2.7.0")    // dependencia para usar imagenes desde Internet (AsyncImage)
+    // Utilidades
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
 
-    // dependencias para notificaciones
-    implementation(platform("androidx.compose:compose-bom:2025.12.00")) // dependencia para notificaciones en Snackbar
-    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha") // dependencia para notficaciones con icono
-
-    implementation(libs.androidx.navigation.compose) // dependencia para usar la navegación entre pantallas
-
+    // Core y Compose
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -66,7 +67,8 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
+
+    // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
