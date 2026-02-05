@@ -39,7 +39,7 @@ fun PantallaProducto(controladorNavegacion: NavController, idProducto: Int) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    // Evitamos que la base de datos se recree en cada recomposición
+    //Evitamos que la base de datos se recree en cada recomposición
     val db = remember {
         Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
             .fallbackToDestructiveMigration()
@@ -47,7 +47,7 @@ fun PantallaProducto(controladorNavegacion: NavController, idProducto: Int) {
             .build()
     }
 
-    // Obtenemos el usuario y el producto (con remember para estabilidad)
+    //Obtenemos el usuario y el producto (con remember para estabilidad)
     val usuario = remember { db.sesionDao().obtenerUsuario() }
     val producto = remember { db.productoDao().getProducto(idProducto) }
 
