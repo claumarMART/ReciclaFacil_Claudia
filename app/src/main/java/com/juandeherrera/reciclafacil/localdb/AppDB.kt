@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
     version = 2, // Subimos a versión 2
     exportSchema = true
 )
-//añadimos los DAO
+// añadimos los DAO
 abstract class AppDB : RoomDatabase() {
     abstract fun usuarioDao(): UsuarioDAO
     abstract fun sesionDao(): SesionDAO
