@@ -29,7 +29,7 @@ fun AppNavigation() {
         navController = controladorNavegacion,
         startDestination = if (sesionIniciada) AppScreens.inicio.route else AppScreens.login.route
     ) {
-        // Se añade "_ ->" para corregir el error de tipo de argumento
+        //Se añade "_ ->" para corregir el error de tipo de argumento
         composable(route = AppScreens.login.route) { _ ->
             PantallaLogin(controladorNavegacion)
         }
