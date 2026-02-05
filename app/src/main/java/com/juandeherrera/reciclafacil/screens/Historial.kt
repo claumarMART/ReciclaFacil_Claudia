@@ -56,10 +56,11 @@ fun PantallaHistorial(controladorNavegacion: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
+                modifier = Modifier.height(100.dp),
                 title = {
                     Text(
-                        "Mi Historial",
-                        style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 24.sp)
+                        "Historial",
+                        style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 28.sp)
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
