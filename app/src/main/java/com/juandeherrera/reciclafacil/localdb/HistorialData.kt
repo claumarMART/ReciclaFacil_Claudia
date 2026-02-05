@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
+// definimos las claves
 @Entity(
     tableName = Estructura.Historial.TABLE_NAME,
     foreignKeys = [
