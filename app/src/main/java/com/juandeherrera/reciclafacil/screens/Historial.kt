@@ -71,7 +71,7 @@ fun PantallaHistorial(controladorNavegacion: NavController) {
         },
         bottomBar = {
             NavigationBar {
-                //LISTA DE ICONOS IGUAL QUE EN PERFIL
+                // LISTA DE ICONOS IGUAL QUE EN PERFIL
                 val items = listOf(
                     Triple("Inicio", Icons.Default.Home, AppScreens.inicio.route),
                     Triple("Búsqueda", Icons.Default.Search, AppScreens.busqueda.route),
