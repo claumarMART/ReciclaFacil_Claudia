@@ -131,7 +131,7 @@ fun PantallaPerfil(controladorNavegacion: NavController) {
         }
     ) { innerPadding ->
 
-        // CUADRO DE DIÁLOGO ELIMINAR CUENTA
+        //CUADRO DE DIÁLOGO ELIMINAR CUENTA
         if (abirCuadroDialogo.value) {
             BasicAlertDialog(onDismissRequest = { abirCuadroDialogo.value = false }) {
                 ElevatedCard(modifier = Modifier.padding(24.dp)) {
