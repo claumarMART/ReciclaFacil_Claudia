@@ -48,7 +48,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.composables:icons-lucide:1.1.0")
 
-    // Room Database (Versión 2.6.1 es la correcta para SDK 35)
+    //Room Database (Versión 2.6.1 es la correcta para SDK 35)
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
