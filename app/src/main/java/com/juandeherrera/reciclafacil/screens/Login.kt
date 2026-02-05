@@ -41,7 +41,7 @@ fun PantallaLogin(controladorNavegacion: NavController) {
 
     // Variables de estado corregidas
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") } // Cambiado a String
+    var password by remember { mutableStateOf("") } //Cambiado a String
     var passVisible by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
