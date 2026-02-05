@@ -36,7 +36,7 @@ import com.juandeherrera.reciclafacil.navigation.AppScreens
 @Composable
 fun PantallaCrearUsuario(controladorNavegacion: NavController) {
 
-    // Estados para los campos de texto
+    //Estados para los campos de texto
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
