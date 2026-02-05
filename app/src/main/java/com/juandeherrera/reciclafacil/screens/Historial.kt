@@ -1,5 +1,6 @@
 package com.juandeherrera.reciclafacil.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,6 +8,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Eco
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -54,38 +60,78 @@ fun PantallaHistorial(controladorNavegacion: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                modifier = Modifier.height(100.dp),
                 title = {
                     Text(
                         "Mi Historial",
-                        style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 28.sp)
+                        style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 24.sp)
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color(0xFF34BB00),
                     titleContentColor = Color.White
                 ),
-                // BOTÓN DE INICIO A LA IZQUIERDA
-                navigationIcon = {
-                    Text(
-                        text = "Volver",
-                        color = Color.White,
-                        style = TextStyle(
-                            fontFamily = FontFamily.SansSerif,
-                            fontSize = 20.sp,
 
-                        ),
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .clickable {
-                                // Navega a la ruta "inicio" y limpia la pila
-                                controladorNavegacion.navigate(AppScreens.inicio.route) {
-                                    popUpTo(AppScreens.inicio.route) { inclusive = true }
-                                }
-                            }
-                    )
-                }
             )
+        },
+        // --- AQUÍ AÑADIMOS LA BARRA INFERIOR IGUAL A LA DE INICIO ---
+        bottomBar = {
+            NavigationBar {
+                // ITEM INICIO
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { controladorNavegacion.navigate(AppScreens.inicio.route) },
+                    icon = { Icon(Icons.Default.Home, contentDescription = "inicio", modifier = Modifier.size(30.dp)) },
+                    label = { Text("Inicio", style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 14.sp)) },
+                    colors = NavigationBarItemDefaults.colors(
+                        unselectedIconColor = Color.Black, unselectedTextColor = Color.Black,
+                        selectedIconColor = Color.Green, indicatorColor = Color(0xFFCEFFD1)
+                    )
+                )
+                // ITEM BÚSQUEDA
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { controladorNavegacion.navigate(AppScreens.busqueda.route) },
+                    icon = { Icon(Icons.Default.Search, contentDescription = "buscar", modifier = Modifier.size(30.dp)) },
+                    label = { Text("Búsqueda", style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 14.sp)) },
+                    colors = NavigationBarItemDefaults.colors(
+                        unselectedIconColor = Color.Black, unselectedTextColor = Color.Black,
+                        selectedIconColor = Color.Green, indicatorColor = Color(0xFFCEFFD1)
+                    )
+                )
+                // ITEM ESCÁNER
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { Toast.makeText(context, "Función no disponible", Toast.LENGTH_SHORT).show() },
+                    icon = { Icon(Icons.Default.PhotoCamera, contentDescription = "escaner", modifier = Modifier.size(30.dp)) },
+                    label = { Text("Escáner", style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 14.sp)) },
+                    colors = NavigationBarItemDefaults.colors(
+                        unselectedIconColor = Color.Black, unselectedTextColor = Color.Black,
+                        selectedIconColor = Color.Green, indicatorColor = Color(0xFFCEFFD1)
+                    )
+                )
+                // ITEM HISTORIAL (Seleccionado)
+                NavigationBarItem(
+                    selected = true,
+                    onClick = { /* Ya estamos aquí */ },
+                    icon = { Icon(Icons.Default.History, contentDescription = "historial", modifier = Modifier.size(30.dp)) },
+                    label = { Text("Historial", style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 14.sp, fontWeight = FontWeight.Bold)) },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.Green, selectedTextColor = Color.Green,
+                        indicatorColor = Color(0xFFCEFFD1), unselectedIconColor = Color.Black, unselectedTextColor = Color.Black
+                    )
+                )
+                // ITEM PERFIL
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { controladorNavegacion.navigate(AppScreens.perfil.route) },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "perfil", modifier = Modifier.size(30.dp)) },
+                    label = { Text("Perfil", style = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 14.sp)) },
+                    colors = NavigationBarItemDefaults.colors(
+                        unselectedIconColor = Color.Black, unselectedTextColor = Color.Black,
+                        selectedIconColor = Color.Green, indicatorColor = Color(0xFFCEFFD1)
+                    )
+                )
+            }
         }
     ) { innerPadding ->
         Column(
