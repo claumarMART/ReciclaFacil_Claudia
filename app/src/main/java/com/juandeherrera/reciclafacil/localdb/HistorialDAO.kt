@@ -6,6 +6,7 @@ import androidx.room.Query
 
 @Dao
 interface HistorialDAO {
+    // consultas
     @Query("SELECT p.* FROM ${Estructura.Historial.TABLE_NAME} h " +
             "INNER JOIN ${Estructura.Producto.TABLE_NAME} p ON h.${Estructura.Historial.ID_PRODUCTO} = p.${Estructura.Producto.ID} " +
             "WHERE h.${Estructura.Historial.ID_USUARIO} = :idUsuarioSesion")
